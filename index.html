@@ -4,77 +4,61 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Warangal OneStop — Neon Hero</title>
-<meta name="theme-color" content="#0a1330"/>
-<link rel="manifest" href="/manifest.json"/>
-<link rel="icon" href="/icon-192.png" sizes="192x192"/>
-<link rel="apple-touch-icon" href="/icon-192.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
-
 <style>
   :root{
     --bgA:#0a1330; --bgB:#121a50;
     --ink:#f6f8ff; --muted:#b9c6e6;
-    --cyan:#22e6ff; --violet:#9b4dff; --mag:#ff3b6b; --orange:#ff8b22; --lime:#7dff70;
-    --shadow:0 24px 90px rgba(0,0,0,.55);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0; color:var(--ink);
     font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      radial-gradient(1600px 760px at 86% 9%, rgba(130,150,255,.26), transparent 60%),
-      radial-gradient(1200px 640px at 11% 86%, rgba(34,211,238,.20), transparent 60%),
-      linear-gradient(135deg, var(--bgA), var(--bgB));
+    background:linear-gradient(135deg,var(--bgA),var(--bgB));
     overflow-x:hidden;
   }
-  .glass{
-    position:fixed; inset:0; pointer-events:none; z-index:-1;
-    background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-    backdrop-filter: blur(8px);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 140px rgba(255,255,255,.05);
-  }
-  .star{position:fixed;width:3px;height:3px;border-radius:50%;
-        background:rgba(255,255,255,.9); box-shadow:0 0 10px rgba(255,255,255,.9);
-        animation:twinkle 3.8s infinite ease-in-out}
-  @keyframes twinkle{0%,100%{transform:scale(.6);opacity:.35}50%{transform:scale(1.6);opacity:1}}
 
-  .hero{width:100%; padding:56px 5vw 0; position:relative}
-  .brand{display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap}
+  /* Canvas = background layer (no blend/backdrop needed) */
+  #bg {
+    position:fixed; inset:0; width:100vw; height:100vh; display:block; z-index:-1;
+    background: radial-gradient(1600px 760px at 86% 9%, rgba(130,150,255,.22), transparent 60%),
+                radial-gradient(1200px 640px at 11% 86%, rgba(34,211,238,.18), transparent 60%);
+  }
+
+  .hero{
+    width:100%; padding:56px 5vw 0; position:relative;
+  }
   .brand h1{
     margin:0; font-family:Montserrat, sans-serif; font-weight:800;
     font-size:min(12vw,108px); letter-spacing:.12em;
     text-shadow:0 6px 22px rgba(0,0,0,.45);
   }
-  .sub{margin:6px 0 12px 2px; color:var(--muted); font-size:min(4.2vw,22px)}
+  .sub{margin:8px 0 0 2px; color:var(--muted); font-size:min(4.2vw,22px)}
 
+  /* Right floating orb (pure box-shadow glow; safe everywhere) */
   .orb{
-    position:absolute; right:6vw; top:64px; width:min(22vw,220px); height:min(22vw,220px); border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.96), rgba(255,255,255,.22) 62%, transparent 72%);
-    mix-blend-mode:screen; filter:drop-shadow(0 0 120px rgba(255,255,255,.46));
+    position:absolute; right:6vw; top:64px; width:min(22vw,220px); aspect-ratio:1/1; border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, rgba(255,255,255,.95) 0 38%, rgba(255,255,255,.18) 62%, transparent 72%);
+    box-shadow:0 0 120px 40px rgba(255,255,255,.28);
   }
-  .net{position:absolute; right:calc(6vw + 14px); top:calc(64px + 14px); opacity:.95;
-       filter:drop-shadow(0 8px 24px rgba(255,255,255,.45))}
+  .net{position:absolute; right:calc(6vw + 14px); top:calc(64px + 14px); opacity:.95}
   .net svg *{stroke:white}
 
-  .wave-wrap{position:relative; height:min(48vh,520px); margin:10px 0 0; filter:drop-shadow(0 26px 50px rgba(0,0,0,.52))}
-  #wave{width:100%; height:100%; display:block}
-
+  /* Cards & tiles (glass-y look with simple alpha only) */
   .features{
     width:100%; max-width:1280px; margin:28px auto 8px; padding:0 5vw;
     display:grid; grid-template-columns:repeat(3,1fr); gap:28px;
   }
   .fcard{
     text-align:center; padding:20px 14px 22px; border-radius:26px;
-    backdrop-filter: blur(10px);
-    background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
-    border:1px solid rgba(255,255,255,.22);
-    box-shadow:var(--shadow); transition:.25s ease;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 24px 90px rgba(0,0,0,.55); transition:.25s ease;
   }
   .fcard:hover{ transform:translateY(-6px); box-shadow:0 22px 60px rgba(0,0,0,.6)}
   .bubble{
     width:118px;height:118px;border-radius:50%;margin:8px auto 12px;display:grid;place-items:center;color:#fff;
-    background:conic-gradient(from 140deg, var(--cyan), var(--violet), var(--mag), var(--orange), var(--cyan));
+    background:conic-gradient(from 140deg, #22e6ff, #9b4dff, #ff3b6b, #ff8b22, #22e6ff);
     box-shadow: inset 0 0 28px rgba(255,255,255,.45), 0 12px 34px rgba(34,211,238,.45);
   }
   .fcard h3{margin:10px 0 6px; font-family:Montserrat; letter-spacing:.02em}
@@ -89,19 +73,19 @@
     position:relative;height:160px;border-radius:22px;overflow:hidden;cursor:pointer;
     border:1px solid rgba(255,255,255,.22);
     background:
-      radial-gradient(120% 120% at 10% 90%, rgba(255,59,107,.50), transparent 60%),
-      linear-gradient(135deg, rgba(99,102,241,.58), rgba(34,211,238,.44));
-    box-shadow:var(--shadow);transition:transform .25s ease, box-shadow .25s ease;
+      radial-gradient(120% 120% at 10% 90%, rgba(255,59,107,.52), transparent 60%),
+      linear-gradient(135deg, rgba(99,102,241,.62), rgba(34,211,238,.48));
+    box-shadow:0 24px 90px rgba(0,0,0,.55);transition:transform .25s ease, box-shadow .25s ease;
   }
   .tile:nth-child(2){
     background:
-      radial-gradient(120% 120% at 90% 10%, rgba(34,211,238,.52), transparent 60%),
-      linear-gradient(135deg, rgba(236,72,153,.62), rgba(99,102,241,.50));
+      radial-gradient(120% 120% at 90% 10%, rgba(34,211,238,.55), transparent 60%),
+      linear-gradient(135deg, rgba(236,72,153,.66), rgba(99,102,241,.54));
   }
   .tile:nth-child(3){
     background:
-      radial-gradient(120% 120% at 10% 90%, rgba(155,77,255,.58), transparent 60%),
-      linear-gradient(135deg, rgba(56,189,248,.60), rgba(250,204,21,.48));
+      radial-gradient(120% 120% at 10% 90%, rgba(155,77,255,.62), transparent 60%),
+      linear-gradient(135deg, rgba(56,189,248,.62), rgba(250,204,21,.50));
   }
   .tile:hover{transform:translateY(-6px); box-shadow:0 26px 78px rgba(0,0,0,.62)}
   .tile .t{position:absolute; left:16px; bottom:14px; font-weight:800; letter-spacing:.04em}
@@ -112,22 +96,12 @@
     .brand h1{font-size:44px}
     .sub{font-size:16px}
     .features,.explore{grid-template-columns:1fr}
-    .wave-wrap{height:40vh}
   }
 </style>
 </head>
 <body>
-<div class="glass" aria-hidden="true"></div>
 
-<script>
-  for(let i=0;i<32;i++){
-    const s=document.createElement('div'); s.className='star';
-    s.style.left=(Math.random()*100)+'%';
-    s.style.top=(Math.random()*100)+'%';
-    s.style.animationDelay=(Math.random()*3)+'s';
-    document.body.appendChild(s);
-  }
-</script>
+<canvas id="bg"></canvas>
 
 <section class="hero">
   <div class="brand"><h1>SAMPLE</h1></div>
@@ -145,8 +119,6 @@
       </g>
     </svg>
   </div>
-
-  <div class="wave-wrap"><canvas id="wave"></canvas></div>
 </section>
 
 <section class="features">
@@ -191,97 +163,111 @@
 </section>
 
 <script>
-/* Neon wave — matched silhouette & colours, slow L→R flow with big right crest */
+/* One canvas = stars + neon ribbon, zero forbidden CSS */
 (function(){
-  const canvas = document.getElementById('wave');
-  const ctx = canvas.getContext('2d', {alpha:true});
-  let t = 0, hue = 0;
+  const c = document.getElementById('bg');
+  const ctx = c.getContext('2d');
+  let t = 0, hue = 0, stars=[];
 
   function resize(){
-    const r = canvas.parentElement.getBoundingClientRect();
-    canvas.width  = Math.floor(r.width  * devicePixelRatio);
-    canvas.height = Math.floor(r.height * devicePixelRatio);
+    c.width = Math.floor(innerWidth * devicePixelRatio);
+    c.height = Math.floor(innerHeight * devicePixelRatio);
     ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    stars = Array.from({length:42},()=>({
+      x: Math.random()*innerWidth,
+      y: Math.random()*innerHeight,
+      r: Math.random()*1.6 + .4,
+      d: Math.random()*3.5 + 1.3
+    }));
   }
   addEventListener('resize', resize, {passive:true}); resize();
 
-  function crest(x,w){
-    const cx = w*0.78, sigma = w*0.10;
-    return 1 + 1.15*Math.exp(-((x-cx)*(x-cx))/(2*sigma*sigma));
+  function drawStars(){
+    for(const s of stars){
+      const o = .35 + .65*Math.abs(Math.sin((t/s.d)/40));
+      ctx.fillStyle = `rgba(255,255,255,${o})`;
+      ctx.shadowBlur = 6; ctx.shadowColor = 'rgba(255,255,255,.9)';
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.shadowBlur = 0;
   }
+
   function grad(w){
     const g = ctx.createLinearGradient(0,0,w,0);
-    const sh = (Math.sin(hue/100)+1)/2 * 0.30;
+    const sh = (Math.sin(t/700)+1)/2 * 0.30;
     g.addColorStop((0.00+sh)%1, `hsl(${(190+hue)%360} 100% 63%)`);
     g.addColorStop((0.45+sh)%1, `hsl(${(290+hue)%360} 100% 64%)`);
     g.addColorStop((0.80+sh)%1, `hsl(${(16 +hue)%360} 100% 60%)`);
     g.addColorStop((0.98+sh)%1, `hsl(${(105+hue)%360} 95% 62%)`);
     return g;
   }
-  function ribbon(base, amp, thick, alpha, phase, speed){
-    const w = canvas.width / devicePixelRatio;
-    const h = canvas.height / devicePixelRatio;
+  function crest(x,w){ const cx=w*0.78, s=w*0.10; return 1+1.15*Math.exp(-((x-cx)*(x-cx))/(2*s*s)); }
 
-    ctx.lineJoin='round'; ctx.lineCap='round';
-    ctx.shadowBlur = 14; ctx.shadowColor='rgba(255,255,255,.55)';
-    ctx.globalAlpha = alpha*0.42; ctx.lineWidth = thick*2.4; ctx.strokeStyle = grad(w);
-    ctx.beginPath();
-    for(let x=0;x<=w;x++){
-      const a = amp*crest(x,w);
-      const y = base
-        + Math.sin((x - t*speed + phase)/62) * a
-        + Math.sin((x - t*speed*0.8 + phase)/22) * (a*0.40)
-        + Math.cos((x - t*speed*1.1)/170) * (a*0.22);
-      x?ctx.lineTo(x,y):ctx.moveTo(0,y);
+  function ribbon(){
+    const w=c.width/devicePixelRatio, h=c.height/devicePixelRatio;
+    const base = h*0.50 + Math.sin(t/700)*h*0.08;
+    const layers = [
+      {amp:44, th:12, a:.96, ph:0,   sp:.65},
+      {amp:36, th:10, a:.78, ph:120, sp:.62},
+      {amp:28, th: 8, a:.66, ph:240, sp:.60}
+    ];
+
+    // ambience
+    const ag = ctx.createLinearGradient(0,0,w,0);
+    ag.addColorStop(0,'rgba(34,230,255,.16)');
+    ag.addColorStop(.5,'rgba(155,77,255,.14)');
+    ag.addColorStop(1,'rgba(255,139,34,.14)');
+    ctx.fillStyle = ag; ctx.fillRect(0,0,w,h);
+
+    for(const L of layers){
+      ctx.lineJoin='round'; ctx.lineCap='round';
+
+      // halo
+      ctx.shadowBlur = 14; ctx.shadowColor='rgba(255,255,255,.55)';
+      ctx.globalAlpha = L.a*0.42; ctx.lineWidth = L.th*2.4; ctx.strokeStyle = grad(w);
+      ctx.beginPath();
+      for(let x=0;x<=w;x++){
+        const a=L.amp*crest(x,w);
+        const y=base
+          + Math.sin((x - t*L.sp + L.ph)/62)*a
+          + Math.sin((x - t*L.sp*0.8 + L.ph)/22)*(a*0.40)
+          + Math.cos((x - t*L.sp*1.1)/170)*(a*0.22);
+        x?ctx.lineTo(x,y):ctx.moveTo(0,y);
+      }
+      ctx.stroke();
+
+      // core
+      ctx.shadowBlur = 0; ctx.globalAlpha = L.a; ctx.lineWidth = L.th; ctx.strokeStyle = grad(w);
+      ctx.beginPath();
+      for(let x=0;x<=w;x++){
+        const a=L.amp*crest(x,w);
+        const y=base
+          + Math.sin((x - t*L.sp + L.ph)/62)*a
+          + Math.sin((x - t*L.sp*0.8 + L.ph)/22)*(a*0.40)
+          + Math.cos((x - t*L.sp*1.1)/170)*(a*0.22);
+        x?ctx.lineTo(x,y):ctx.moveTo(0,y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
 
-    ctx.shadowBlur = 0; ctx.globalAlpha = alpha; ctx.lineWidth = thick; ctx.strokeStyle = grad(w);
-    ctx.beginPath();
-    for(let x=0;x<=w;x++){
-      const a = amp*crest(x,w);
-      const y = base
-        + Math.sin((x - t*speed + phase)/62) * a
-        + Math.sin((x - t*speed*0.8 + phase)/22) * (a*0.40)
-        + Math.cos((x - t*speed*1.1)/170) * (a*0.22);
-      x?ctx.lineTo(x,y):ctx.moveTo(0,y);
-    }
-    ctx.stroke();
-
-    ctx.lineTo(w,h); ctx.lineTo(0,h); ctx.closePath();
-    const body = ctx.createLinearGradient(0,0,w,0);
-    body.addColorStop(0,  'rgba(34,230,255,.22)');
-    body.addColorStop(.5, 'rgba(155,77,255,.20)');
-    body.addColorStop(1,  'rgba(255,139,34,.18)');
-    ctx.fillStyle = body; ctx.fill();
-
-    const lgx = 18, lgy = base + Math.sin((0 - t*speed + phase)/62)*amp;
+    // left glow dot
+    const lgx = 18, lgy = base + Math.sin((0 - t*.65)/62)*44;
     const lg = ctx.createRadialGradient(lgx,lgy,6, lgx,lgy,46);
-    lg.addColorStop(0,'rgba(255,255,255,.70)');
-    lg.addColorStop(1,'rgba(255,255,255,0)');
+    lg.addColorStop(0,'rgba(255,255,255,.70)'); lg.addColorStop(1,'rgba(255,255,255,0)');
     ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(lgx,lgy,46,0,Math.PI*2); ctx.fill();
   }
-  function draw(){
-    const w = canvas.width / devicePixelRatio;
-    const h = canvas.height / devicePixelRatio;
+
+  function tick(){
+    const w=c.width/devicePixelRatio, h=c.height/devicePixelRatio;
     ctx.clearRect(0,0,w,h);
-    const tide = h*0.50 + Math.sin(t/700)*h*0.08;
-    ribbon(tide+14, 44, 12, .96,   0, 0.65);
-    ribbon(tide- 4, 36, 10, .78, 120, 0.62);
-    ribbon(tide-22, 28,  8, .66, 240, 0.60);
+    drawStars();
+    ribbon();
     t += 1.6; hue = (hue + 0.9) % 360;
-    requestAnimationFrame(draw);
+    requestAnimationFrame(tick);
   }
-  draw();
+  tick();
 })();
 </script>
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js');
-    });
-  }
-</script>
 </body>
 </html>
